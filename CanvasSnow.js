@@ -2,12 +2,12 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
+		define("CanvasSnow", [], factory);
 	else if(typeof exports === 'object')
 		exports["CanvasSnow"] = factory();
 	else
 		root["CanvasSnow"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+})(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,6 +54,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -69,19 +74,145 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ "./node_modules/awesome-js-funcs/judgeBasic/isString.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/awesome-js-funcs/judgeBasic/isString.js ***!
+  \**************************************************************/
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_awesome_js_funcs_judgeBasic_isString__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Snow__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__SnowList__ = __webpack_require__(3);
+__webpack_require__.r(__webpack_exports__);
+/**
+ * 判断是否字符串
+ * @param str
+ * @returns {boolean}
+ */
+/* harmony default export */ __webpack_exports__["default"] = (function (str) {
+  return typeof str === 'string' && str.constructor === String;
+});
+
+/***/ }),
+
+/***/ "./src/Snow.js":
+/*!*********************!*\
+  !*** ./src/Snow.js ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class(x, y, radius, fn, canvasW, canvasH) {
+    _classCallCheck(this, _class);
+
+    this.x = x;
+    this.y = y;
+    this.r = radius;
+    this.fn = fn;
+    this.canvasW = canvasW;
+    this.canvasH = canvasH;
+  }
+
+  _class.prototype.update = function update() {
+    if (this.y > this.canvasH) {
+      this.x = Math.random() * this.canvasW;
+      this.y = 0;
+    } else {
+      this.x = this.fn.x(this.x, this.y);
+      this.y = this.fn.y(this.y, this.y);
+    }
+  };
+
+  _class.prototype.draw = function draw(cxt) {
+    var grd = cxt.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+    grd.addColorStop(0, 'rgba(255, 255, 255, ' + this.r / 6 * 1 + ')');
+    grd.addColorStop(.5, 'rgba(255, 255, 255, ' + this.r / 6 * .5 + ')');
+    grd.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    cxt.fillStyle = grd;
+    cxt.fillRect(this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
+  };
+
+  return _class;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (_class);
+;
+
+/***/ }),
+
+/***/ "./src/SnowList.js":
+/*!*************************!*\
+  !*** ./src/SnowList.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+  function _class() {
+    _classCallCheck(this, _class);
+
+    this.list = [];
+  }
+
+  _class.prototype.update = function update() {
+    for (var i = 0, len = this.size(); i < len; i++) {
+      this.list[i].update();
+    }
+  };
+
+  _class.prototype.push = function push(snow) {
+    this.list.push(snow);
+  };
+
+  _class.prototype.draw = function draw(cxt) {
+    for (var i = 0, len = this.size(); i < len; i++) {
+      this.list[i].draw(cxt);
+    }
+  };
+
+  _class.prototype.get = function get(index) {
+    return this.list[index];
+  };
+
+  _class.prototype.size = function size() {
+    return this.list.length;
+  };
+
+  return _class;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (_class);
+;
+
+/***/ }),
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var awesome_js_funcs_judgeBasic_isString__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! awesome-js-funcs/judgeBasic/isString */ "./node_modules/awesome-js-funcs/judgeBasic/isString.js");
+/* harmony import */ var _Snow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Snow */ "./src/Snow.js");
+/* harmony import */ var _SnowList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SnowList */ "./src/SnowList.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 
@@ -100,7 +231,7 @@ var CanvasSnow = function () {
 
     _classCallCheck(this, CanvasSnow);
 
-    this.context = Object(__WEBPACK_IMPORTED_MODULE_0_awesome_js_funcs_judgeBasic_isString__["a" /* default */])(context) ? document.querySelector(context) : context;
+    this.context = Object(awesome_js_funcs_judgeBasic_isString__WEBPACK_IMPORTED_MODULE_0__["default"])(context) ? document.querySelector(context) : context;
     this.width = _getHorizontalDistance(this.context, width);
     this.height = _getVerticalDistance(this.context, height);
     this.cell = cell;
@@ -120,7 +251,7 @@ var CanvasSnow = function () {
     }
 
     if (!this.snowList) {
-      this.snowList = new __WEBPACK_IMPORTED_MODULE_2__SnowList__["a" /* default */]();
+      this.snowList = new _SnowList__WEBPACK_IMPORTED_MODULE_2__["default"]();
       this._newSnow();
     }
 
@@ -179,7 +310,7 @@ var CanvasSnow = function () {
           randomR = this._getRandom('r'),
           randomFnx = this._getRandom('fnx'),
           randomFny = this._getRandom('fny'),
-          snow = new __WEBPACK_IMPORTED_MODULE_1__Snow__["a" /* default */](randomX, randomY, randomR, {
+          snow = new _Snow__WEBPACK_IMPORTED_MODULE_1__["default"](randomX, randomY, randomR, {
         x: randomFnx,
         y: randomFny
       }, this.width, this.height);
@@ -234,7 +365,7 @@ var _handleDistanceNum = function _handleDistanceNum(num, totalDistance) {
   if (num.toString().indexOf('%') !== -1) {
     return num.split('%')[0] / 100 * totalDistance;
   }
-  return Object(__WEBPACK_IMPORTED_MODULE_0_awesome_js_funcs_judgeBasic_isString__["a" /* default */])(num) ? Number(num) : num;
+  return Object(awesome_js_funcs_judgeBasic_isString__WEBPACK_IMPORTED_MODULE_0__["default"])(num) ? Number(num) : num;
 },
     _getTotalDistance = function _getTotalDistance(_ref2) {
   var el = _ref2.el,
@@ -265,109 +396,8 @@ var _handleDistanceNum = function _handleDistanceNum(num, totalDistance) {
   }));
 };
 
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/**
- * 判断是否字符串
- * @param str
- * @returns {boolean}
- */
-/* harmony default export */ __webpack_exports__["a"] = (function (str) {
-  return typeof str === 'string' && str.constructor === String;
-});
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class(x, y, radius, fn, canvasW, canvasH) {
-    _classCallCheck(this, _class);
-
-    this.x = x;
-    this.y = y;
-    this.r = radius;
-    this.fn = fn;
-    this.canvasW = canvasW;
-    this.canvasH = canvasH;
-  }
-
-  _class.prototype.update = function update() {
-    if (this.y > this.canvasH) {
-      this.x = Math.random() * this.canvasW;
-      this.y = 0;
-    } else {
-      this.x = this.fn.x(this.x, this.y);
-      this.y = this.fn.y(this.y, this.y);
-    }
-  };
-
-  _class.prototype.draw = function draw(cxt) {
-    var grd = cxt.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
-    grd.addColorStop(0, 'rgba(255, 255, 255, ' + this.r / 6 * 1 + ')');
-    grd.addColorStop(.5, 'rgba(255, 255, 255, ' + this.r / 6 * .5 + ')');
-    grd.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    cxt.fillStyle = grd;
-    cxt.fillRect(this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
-  };
-
-  return _class;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (_class);
-;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _class = function () {
-  function _class() {
-    _classCallCheck(this, _class);
-
-    this.list = [];
-  }
-
-  _class.prototype.update = function update() {
-    for (var i = 0, len = this.size(); i < len; i++) {
-      this.list[i].update();
-    }
-  };
-
-  _class.prototype.push = function push(snow) {
-    this.list.push(snow);
-  };
-
-  _class.prototype.draw = function draw(cxt) {
-    for (var i = 0, len = this.size(); i < len; i++) {
-      this.list[i].draw(cxt);
-    }
-  };
-
-  _class.prototype.get = function get(index) {
-    return this.list[index];
-  };
-
-  _class.prototype.size = function size() {
-    return this.list.length;
-  };
-
-  return _class;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (_class);
-;
-
 /***/ })
-/******/ ])["default"];
+
+/******/ })["default"];
 });
 //# sourceMappingURL=CanvasSnow.js.map
